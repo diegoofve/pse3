@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  id     Int    @id @default(autoincrement())
+  name   String @db.VarChar(50)
+  actors String @db.VarChar(200)
+  showTimings ShowTiming[] // <-- Relación con ShowTiming (1 película puede estar en muchas carteleras)
+
+  @@map("movie") // <-- Apunta a tabla "movie"
+}
+
+model points {
+  id     Int @id @default(autoincrement())
+  points Int
+}
+
+model sales {
+  id     Int   @id @default(autoincrement())
+  amount Float
+}
+
+model ShowTiming {
+  id  Int      @id @default(autoincrement())
+  day DateTime @db.Date
+
+  movie_id   Int // <-- FK a Movie
+  theater_id Int // <-- FK a Theater
+  timing_id  Int // <-- FK a Timeslot
+
+  // Relación a Película (M..N, FK por el id)
+  movie   Movie    @relation(fields: [movie_id], references: [id])
+
+  // Relación a Cine (M..N, FK por el id)
+  theater Theater @relation(fields: [theater_id], references: [id])
+
+  // Relación a Timeslot (M..N, FK por el id)
+  timing  Timeslot @relation(fields: [timing_id], references: [id])
+
+  @@map("show_timing") // <-- Nombre de tabla "show_timing"
+}
+
+
+model Theater {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(50)
+  capacity Int
+  showTimings ShowTiming[] // <-- Relación con ShowTiming (1 cine puede tener muchas carteleras)
+
+  @@map("theater")
+  }
+
+model Timeslot {
+  id          Int          @id @default(autoincrement())
+  start_time  String       @db.VarChar(5)
+  end_time    String       @db.VarChar(5)
+  showTimings ShowTiming[]
+
+  @@map("timeslot")
+}
+
+enum Role{
+  CLIENT
+  CINEMA
+  ADMIN
+}
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  password String
+  role Role @default(CLIENT)
+  @@map("user")
+}

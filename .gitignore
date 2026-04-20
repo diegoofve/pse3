@@ -1,0 +1,10 @@
+/servidor/node_modules
+/servidor/package-lock.json
+/servidor/.env
+node_modules
+# Keep environment variables out of version control
+.env
+
+/generated/prisma
+/cliente/node_modules
+/cliente/package-lock.json
