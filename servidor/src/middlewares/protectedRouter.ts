@@ -13,6 +13,9 @@ import { authorize } from './auth';
  */
 
 const protectedRouter = Router();
+protectedRouter.get('/', passport.authenticate('jwt', { session: false }), authorize([Role.CLIENT, Role.CINEMA, Role.ADMIN]), 
+MovieController.getMovies);
+
 
 // POST /movies (ruta, middleware de autenticación, controller)
 protectedRouter.get('/movies', passport.authenticate('jwt', { session: false }), authorize([Role.CLIENT, Role.CINEMA, Role.ADMIN]), 
