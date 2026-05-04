@@ -4,6 +4,7 @@ import passport from 'passport';
 import { CinemaController } from '../controllers/cinema.controller';
 import { Role } from "@prisma/client";
 import { authorize } from './auth';
+import { buyTicket } from '../controllers/payment.controller';
 
 /**
  * Middleware: Protected Router
@@ -48,5 +49,7 @@ CinemaController.editCinema
 protectedRouter.delete('/cinemas', passport.authenticate('jwt', { session: false }), authorize([Role.ADMIN]),
 CinemaController.deleteCinema
 );
+
+protectedRouter.post('/tickets/buy', passport.authenticate('jwt', { session: false }), authorize([Role.CLIENT, Role.CINEMA, Role.ADMIN]),buyTicket);
 
 export default protectedRouter;
