@@ -39,7 +39,7 @@ createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <BrowserRouter>
         <Routes>
-          <Route path="/" element={<App />} />
+          <Route path="/" element={<Layout><App /></Layout>} />
             <Route path="/cines" element={<Layout><CinesList /></Layout>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
