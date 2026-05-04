@@ -1,38 +1,32 @@
-/* App.css */
 
-/* 1. Ajustes globales básicos (aunque CssBaseline ya hace gran parte de esto) */
 html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow-x: hidden; /* Evita el scroll horizontal accidental */
-}
+  overflow-x: hidden;}
 
 *, *::before, *::after {
   box-sizing: inherit;
 }
 
-/* 2. Animación de "flotación" para la imagen del Hero */
 @keyframes float {
   0% {
     transform: translateY(0px) rotate(2deg);
   }
   50% {
-    transform: translateY(-15px) rotate(3deg); /* Sube un poco y gira un grado más */
+    transform: translateY(-15px) rotate(3deg);
   }
   100% {
     transform: translateY(0px) rotate(2deg);
   }
 }
 
-/* 3. Clase que le aplicaremos a la imagen */
 .hero-animated-img {
   animation: float 6s ease-in-out infinite;
   transition: all 0.3s ease;
 }
 
-/* Pequeño efecto al pasar el ratón por encima de la imagen */
 .hero-animated-img:hover {
   filter: brightness(1.1);
-  box-shadow: 0px 25px 50px rgba(94, 53, 177, 0.2); /* Sombra con el color primario de tu tema */
+  box-shadow: 0px 25px 50px rgba(94, 53, 177, 0.2);
 }
