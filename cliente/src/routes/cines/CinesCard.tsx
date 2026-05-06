@@ -48,8 +48,6 @@ export const CineCard = ({ cinema }: CineProps) => {
     cardNumber: '',
     expiryDate: '',
     cvv: '',
-    amount: 8, 
-    currency: 'EUR'
   });
 
   const handleSave = async () => {
@@ -68,11 +66,16 @@ export const CineCard = ({ cinema }: CineProps) => {
     return;
    }
     try {
-      await api.post('/tickets/buy', {
-        movieId: selectedMovieId,
-        cinemaId: cinema.id,
-        paymentDetails: paymentForm
-      });
+
+      const payload = {
+      movieId: Number(selectedMovieId),
+      cinemaId: Number(cinema.id),
+      cardHolder: paymentForm.cardHolder,
+      cardNumber: paymentForm.cardNumber,
+      expiryDate: paymentForm.expiryDate,
+    };
+
+      await api.post('/tickets/buy', payload);
             alert("¡Pago completado! Ya tienes tu entrada.");
             setOpenPayment(false);
 
@@ -262,7 +265,7 @@ export const CineCard = ({ cinema }: CineProps) => {
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setOpenPayment(false)}>Cancelar</Button>
           <Button onClick={handleConfirmPayment} variant="contained">
-            Pagar {paymentForm.amount}€
+            Pagar 
           </Button>
         </DialogActions>
       </Dialog>
