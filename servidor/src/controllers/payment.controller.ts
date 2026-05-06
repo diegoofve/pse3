@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { PaymentService } from '../services/payment.service';
-import { BuyTicketSchema, PaymentSchema } from '../dto/payment.dto';
+import { BuyTicketSchema } from '../dto/payment.dto';
 import axios from 'axios';
 
 export const buyTicket = async (req: Request, res: Response) => {
@@ -12,14 +12,14 @@ export const buyTicket = async (req: Request, res: Response) => {
             return;
         }
 
-        const { movieId, cinemaId, quantity, cardHolder, cardNumber, expiryDate, cvv } = validation.data;
+        const { movieId, cinemaId, cardHolder, cardNumber, expiryDate, cvv } = validation.data;
         
         const paymentResult = await PaymentService.chargePayment({
             cardHolder: cardHolder,
             cardNumber: cardNumber,
             expiryDate: expiryDate,
             cvv: cvv,
-            amount: quantity * 8, //hardcodeamos el precio a 8 euros por entrada
+            amount: 8, //hardcodeamos el precio a 8 euros por entrada y una entrada por peticion
             currency: "EUR"
         });
 

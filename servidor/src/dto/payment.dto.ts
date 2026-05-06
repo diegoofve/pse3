@@ -12,7 +12,6 @@ export const PaymentSchema = z.object({
 export const BuyTicketSchema = z.object({
     movieId: z.number().int(),
     cinemaId: z.number().int(),
-    quantity: z.number().int().positive(),
     cardHolder: z.string().min(1),
     cardNumber: z.string().regex(/^\d{16}$/, 'Debe tener exactamente 16 dígitos'),
     expiryDate: z.string().regex(/^\d{2}\/\d{2}$/, 'Formato MM/YY'),
