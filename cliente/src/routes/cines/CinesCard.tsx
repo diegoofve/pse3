@@ -10,7 +10,11 @@ import {
   Chip,
   Divider,
   useTheme,
-  TextField
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon, AccessAlarm, Theaters, Place } from '@mui/icons-material';
 import type { CinemaResponseDto } from "../../types/cines.types";
@@ -37,10 +41,47 @@ export const CineCard = ({ cinema }: CineProps) => {
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState(cinema.name);
   const [editCapacity, setEditCapacity] = useState(cinema.capacity);
+  const [openPayment, setOpenPayment] = useState(false);
+  const [selectedMovieId, setSelectedMovieId] = useState<number | string | null>(null);
+  const [paymentForm, setPaymentForm] = useState({
+    cardHolder: '',
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
+    amount: 8, 
+    currency: 'EUR'
+  });
 
   const handleSave = async () => {
     await api.put('/cinemas', { id: cinema.id, name: editName, capacity: editCapacity });
     setEditing(false);
+  };
+
+  const handleOpenPayment = (movieId: number | string) => {
+    setSelectedMovieId(movieId);
+    setOpenPayment(true);
+  };
+
+  const handleConfirmPayment = async () => {
+    if (!paymentForm.cardHolder || !paymentForm.cardNumber || !paymentForm.expiryDate || !paymentForm.cvv) {
+    alert("Por favor, rellena todos los campos de la tarjeta.");
+    return;
+   }
+    try {
+      await api.post('/tickets/buy', {
+        movieId: selectedMovieId,
+        cinemaId: cinema.id,
+        paymentDetails: paymentForm
+      });
+            alert("¡Pago completado! Ya tienes tu entrada.");
+            setOpenPayment(false);
+
+            setPaymentForm({ ...paymentForm, cardHolder: '', cardNumber: '', expiryDate: '', cvv: '' });
+      
+    } catch (error) {
+      console.error('Error al comprar la entrada:', error);
+      alert("Vaya, hubo un error procesando el pago. Inténtalo de nuevo.");
+    }
   };
 
   return (
@@ -136,18 +177,33 @@ export const CineCard = ({ cinema }: CineProps) => {
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 {movie.sessions.map((session, idx) => (
-                  <Chip
-                    key={idx}
-                    icon={<AccessAlarm sx={{ fontSize: '14px !important' }} />}
-                    label={`${session.start} - ${session.end}`}
-                    size="small"
-                    variant="outlined"
-                    sx={{ 
-                      borderRadius: 1, 
-                      bgcolor: 'background.paper',
-                      borderColor: 'rgba(0,0,0,0.1)'
-                    }}
-                  />
+                  <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    
+                    <Chip
+                      icon={<AccessAlarm sx={{ fontSize: '14px !important' }} />}
+                      label={`${session.start} - ${session.end}`}
+                      size="small"
+                      variant="outlined"
+                      sx={{ 
+                        borderRadius: 1, 
+                        bgcolor: 'background.paper',
+                        borderColor: 'rgba(0,0,0,0.1)'
+                      }}
+                    />
+                  
+                    <Button 
+                      variant="contained" 
+                      color="secondary" 
+                      size="small"
+                      onClick={() => handleOpenPayment(movie.id)}
+                      disableElevation
+                      sx={{ borderRadius: 1, fontSize: '0.7rem', minWidth: 'auto', px: 1 }}
+                    >
+                      Comprar
+                    </Button>
+                    
+                  </Box>
+                
                 ))}
                 {movie.sessions.length === 0 && (
                   <Typography variant="caption" color="text.secondary">
@@ -160,6 +216,27 @@ export const CineCard = ({ cinema }: CineProps) => {
           ))}
         </Box>
       </Collapse>
+      <Dialog open={openPayment} onClose={() => setOpenPayment(false)}>
+        <DialogTitle>Finalizar Compra</DialogTitle>
+        
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2, minWidth: 350 }}>
+            <Typography variant="body2" color="text.secondary">
+                Introduce los datos de tu tarjeta...
+            </Typography>
+            <TextField label="Nombre del titular de la tarjeta"/>
+            <TextField label="Número de tarjeta"/>
+            <TextField label="Fecha de caducidad" placeholder="MM/AA"/>
+            <TextField label="CVV" type="password"/>
+            
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={() => setOpenPayment(false)}>Cancelar</Button>
+          <Button onClick={handleConfirmPayment} variant="contained">
+            Pagar {paymentForm.amount}€
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 }

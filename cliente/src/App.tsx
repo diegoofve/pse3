@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Container, Typography, Stack } from '@mui/material';
-import { Theaters, Login } from '@mui/icons-material';
+import { AppRegistration, Login } from '@mui/icons-material';
 import heroImg from './assets/hero.png';
 import './App.css';
 
@@ -49,12 +49,12 @@ function App() {
                 variant="contained" 
                 size="large" 
                 color="primary"
-                startIcon={<Theaters />}
-                onClick={() => navigate('/cines')}
+                startIcon={<AppRegistration />}
+                onClick={() => navigate('/register')}
                 disableElevation
                 sx={{ borderRadius: 2, px: 4, py: 1.5, fontWeight: 'bold' }}
               >
-                Ver Cartelera
+                Registrarse
               </Button>
               
               <Button 
