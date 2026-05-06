@@ -223,11 +223,40 @@ export const CineCard = ({ cinema }: CineProps) => {
             <Typography variant="body2" color="text.secondary">
                 Introduce los datos de tu tarjeta...
             </Typography>
-            <TextField label="Nombre del titular de la tarjeta"/>
-            <TextField label="Número de tarjeta"/>
-            <TextField label="Fecha de caducidad" placeholder="MM/AA"/>
-            <TextField label="CVV" type="password"/>
             
+            <TextField 
+                label="Nombre del titular"
+                value={paymentForm.cardHolder}
+                onChange={(e) => setPaymentForm({...paymentForm, cardHolder: e.target.value})}
+            />
+
+            <TextField 
+                label="Número de tarjeta"
+                slotProps={{ htmlInput: { maxLength: 16 } }}
+                value={paymentForm.cardNumber}
+                onChange={(e) => setPaymentForm({...paymentForm, cardNumber: e.target.value})}
+            />
+
+            <Box sx={{ display: 'flex', gap: 2 }}>
+                <TextField 
+                    label="Fecha de caducidad" 
+                    placeholder="MM/AA"
+                    slotProps={{ htmlInput: { maxLength: 5 } }}   
+                    value={paymentForm.expiryDate}
+                    onChange={(e) => setPaymentForm({...paymentForm, expiryDate: e.target.value})}
+                    sx={{ width: '50%' }}
+                />
+                
+                <TextField 
+                    label="CVV" 
+                    type="password"
+                    slotProps={{ htmlInput: { maxLength: 3 } }}    
+                    value={paymentForm.cvv}
+                    onChange={(e) => setPaymentForm({...paymentForm, cvv: e.target.value})}
+                    sx={{ width: '50%' }}
+                />
+            </Box>
+
         </DialogContent>
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
