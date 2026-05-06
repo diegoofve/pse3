@@ -73,6 +73,7 @@ export const CineCard = ({ cinema }: CineProps) => {
       cardHolder: paymentForm.cardHolder,
       cardNumber: paymentForm.cardNumber,
       expiryDate: paymentForm.expiryDate,
+      cvv: paymentForm.cvv
     };
 
       await api.post('/tickets/buy', payload);
