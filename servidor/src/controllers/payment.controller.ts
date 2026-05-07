@@ -4,6 +4,30 @@ import { BuyTicketSchema } from '../dto/payment.dto';
 import axios from 'axios';
 import { logger } from '../lib/logger';
 
+/**
+ * @openapi
+ * /tickets/buy:
+ *   post:
+ *     summary: Comprar una entrada
+ *     tags: [Tickets]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/BuyTicketDto'
+ *     responses:
+ *       200:
+ *         description: Pago con éxito
+ *       400:
+ *         description: Datos de pago no válidos
+ *       402:
+ *         description: Pasarela de pago no disponible
+ *       500:
+ *         description: Error interno del servidor
+ */
 export const buyTicket = async (req: Request, res: Response) => {
     try {
         const validation = BuyTicketSchema.safeParse(req.body);

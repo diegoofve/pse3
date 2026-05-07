@@ -2,6 +2,22 @@ import { Request, Response } from 'express';
 import { CinemaCreationSchema, CinemaDeletionSchema, CinemaEditSchema, CinemaFiltersSchema } from '../dto/cinema.dto';
 import { CinemaService } from '../services/cinema.service';
 
+/**
+ * @openapi
+ * /cinemas:
+ *   get:
+ *     summary: Obtener listado de cines
+ *     tags: [Cines]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de cines
+ *       400:
+ *         description: Request incorrecta
+ *       500:
+ *         description: Error interno del servidor
+ */
 const getCinemas = async (req: Request, res: Response): Promise<void> => {
   try {
     const validation = CinemaFiltersSchema.safeParse(req.query);
@@ -20,6 +36,28 @@ const getCinemas = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+/**
+ * @openapi
+ * /cinemas:
+ *   post:
+ *     summary: Crear un cine
+ *     tags: [Cines]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CinemaCreationDto'
+ *     responses:
+ *       201:
+ *         description: Cine creado correctamente
+ *       400:
+ *         description: Request incorrecta
+ *       500:
+ *         description: Error interno del servidor
+ */
 const createCinema = async (req: Request, res: Response): Promise<void> => {
   try{
     const validation = CinemaCreationSchema.safeParse(req.body);
@@ -38,6 +76,30 @@ const createCinema = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+/**
+ * @openapi
+ * /cinemas:
+ *   put:
+ *     summary: Editar un cine
+ *     tags: [Cines]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CinemaEditDto'
+ *     responses:
+ *       200:
+ *         description: Cine editado correctamente
+ *       400:
+ *         description: Request incorrecta
+ *       404:
+ *         description: Cine no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
 const editCinema = async (req: Request, res: Response): Promise<void> => {
   try{
     const validation = CinemaEditSchema.safeParse(req.body);
@@ -62,6 +124,28 @@ const editCinema = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+/**
+ * @openapi
+ * /cinemas:
+ *   delete:
+ *     summary: Eliminar un cine
+ *     tags: [Cines]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CinemaDeletionDto'
+ *     responses:
+ *       204:
+ *         description: Cine eliminado correctamente
+ *       404:
+ *         description: Cine no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
 const deleteCinema = async (req: Request, res: Response): Promise<void> => {
   try{
     const validation = CinemaDeletionSchema.safeParse(req.body);

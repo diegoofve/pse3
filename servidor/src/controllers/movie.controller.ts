@@ -2,7 +2,22 @@ import { Request, Response } from 'express';
 import { MovieCreationSchema, MovieDeletionSchema, MovieEditSchema, MovieFiltersSchema } from '../dto/movie.dto';
 import { MovieService } from '../services/movie.service';
 
-
+/**
+ * @openapi
+ * /movies:
+ *   get:
+ *     summary: Obtener listado de películas
+ *     tags: [Películas]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de películas
+ *       400:
+ *         description: Request incorrecta
+ *       500:
+ *         description: Error interno del servidor
+ */
 const getMovies = async (req: Request, res: Response): Promise<void> => {
   try {
     const validation = MovieFiltersSchema.safeParse(req.body);
@@ -21,6 +36,28 @@ const getMovies = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+/**
+ * @openapi
+ * /movies:
+ *   post:
+ *     summary: Crear una película
+ *     tags: [Películas]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/MovieCreationDto'
+ *     responses:
+ *       201:
+ *         description: Película creada correctamente
+ *       400:
+ *         description: Request incorrecta o timeslot no existe
+ *       500:
+ *         description: Error interno del servidor
+ */
 const createMovie = async (req: Request, res: Response): Promise<void> => {
   try {
     const validation = MovieCreationSchema.safeParse(req.body);
@@ -43,6 +80,30 @@ const createMovie = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+/**
+ * @openapi
+ * /movies:
+ *   put:
+ *     summary: Editar una película
+ *     tags: [Películas]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/MovieEditDto'
+ *     responses:
+ *       200:
+ *         description: Película editada correctamente
+ *       400:
+ *         description: Timeslot no existe
+ *       404:
+ *         description: Película no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 const editMovie = async (req: Request, res: Response): Promise<void> => {
   try {
     const validation = MovieEditSchema.safeParse(req.body);
@@ -67,6 +128,28 @@ const editMovie = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+/**
+ * @openapi
+ * /movies:
+ *   delete:
+ *     summary: Eliminar una película
+ *     tags: [Películas]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/MovieDeletionDto'
+ *     responses:
+ *       204:
+ *         description: Película eliminada correctamente
+ *       404:
+ *         description: Película no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 const deleteMovie = async (req: Request, res: Response): Promise<void> => {
   try {
     const validation = MovieDeletionSchema.safeParse(req.body);
