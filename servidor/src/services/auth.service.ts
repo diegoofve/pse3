@@ -4,6 +4,7 @@ import { prisma } from "../lib/db";
 import { Role } from "@prisma/client";
 import type { RegisterResponseDto } from "../dto/auth.dto";
 import jwt from "jsonwebtoken";
+import { logger } from "../lib/logger";
 
 /**
  * Lógica de negocio para autenticación
@@ -22,7 +23,10 @@ export const AuthService = {
                 select: { id: true, email: true, role: true },
             });
             return { success: true, user };
+            logger.info({ userId: user.id }, 'Usuario creado correctamente');
+
         } catch (error: any) {
+            logger.error({ error: error.message }, 'Error al registrar el usuario');
             return {
                 success: false,
                 error: 'Error interno al registrar el usuario.',
@@ -51,7 +55,9 @@ export const AuthService = {
             );
 
             return { success: true, token };
+            logger.info({ userId: user.id }, 'Inicio de sesión correcto');
         } catch (error: any) {
+            logger.error({ error: error.message }, 'Error al iniciar sesión');
             return {
                 success: false,
                 error: 'Error interno al iniciar sesión.',

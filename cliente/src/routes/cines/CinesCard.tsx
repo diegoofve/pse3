@@ -14,7 +14,9 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon, AccessAlarm, Theaters, Place } from '@mui/icons-material';
 import type { CinemaResponseDto } from "../../types/cines.types";
@@ -50,6 +52,13 @@ export const CineCard = ({ cinema }: CineProps) => {
     cvv: '',
   });
 
+  const [toast, setToast] = useState({ open: false, message: '', severity: 'error' as 'error' | 'success' });
+
+  const handleCloseToast = () => {
+    setToast({ ...toast, open: false });
+  }
+
+
   const handleSave = async () => {
     await api.put('/cinemas', { id: cinema.id, name: editName, capacity: editCapacity });
     setEditing(false);
@@ -62,7 +71,7 @@ export const CineCard = ({ cinema }: CineProps) => {
 
   const handleConfirmPayment = async () => {
     if (!paymentForm.cardHolder || !paymentForm.cardNumber || !paymentForm.expiryDate || !paymentForm.cvv) {
-    alert("Por favor, rellena todos los campos de la tarjeta.");
+    setToast({ open: true, message: 'Por favor, completa todos los campos de pago.', severity: 'error' });
     return;
    }
     try {
@@ -77,14 +86,14 @@ export const CineCard = ({ cinema }: CineProps) => {
     };
 
       await api.post('/tickets/buy', payload);
-            alert("¡Pago completado! Ya tienes tu entrada.");
+            setToast({ open: true, message: 'Entrada comprada con éxito', severity: 'success' });
             setOpenPayment(false);
 
             setPaymentForm({ ...paymentForm, cardHolder: '', cardNumber: '', expiryDate: '', cvv: '' });
       
     } catch (error) {
       console.error('Error al comprar la entrada:', error);
-      alert("Vaya, hubo un error procesando el pago. Inténtalo de nuevo.");
+      setToast({ open: true, message: 'Error al procesar el pago. Inténtalo de nuevo.', severity: 'error' });
     }
   };
 

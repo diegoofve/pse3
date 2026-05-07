@@ -3,15 +3,12 @@ import type { CinemaCreationDto, CinemaDeletionDto, CinemaEditDto, CinemaFilters
 import moment from 'moment';
 
 
-// Obtención de cines
 const getCinemas = async (filters: CinemaFiltersDto): Promise<CinemaResponseDto[]> => {
   const { id, sessionBefore, sessionAfter, withMovie, withCatalog } = filters;
 
-  // Filtrado de fechas
   const dateGte: Date | undefined = sessionAfter ? new Date(sessionAfter) : undefined;
   const dateLte = sessionBefore ? new Date(sessionBefore) : undefined;
 
-  // No especificamos el tipo de "theaters" para que se produzca la inferencia automática
   const theaters = await prisma.theater.findMany({
     where: {
       id: filters.id,
@@ -34,11 +31,10 @@ const getCinemas = async (filters: CinemaFiltersDto): Promise<CinemaResponseDto[
           movie: true,
           timing: true
         }
-      } : undefined // IMPORTANTE: Usamos undefined para no incluir
+      } : undefined
     }
   });
 
-  // Mapeo profesional para devolver resultados acorde a CinemaResponseDto
   return theaters.map((theater:any) => {
     const response: CinemaResponseDto = {
       id: theater.id,
@@ -46,7 +42,6 @@ const getCinemas = async (filters: CinemaFiltersDto): Promise<CinemaResponseDto[
       capacity: theater.capacity
     };
 
-    // Mapeo de carteleras y películas (solo si se ha solicitado y además tenemos sesiones)
     if (withCatalog && theater.showTimings) {
       const movieMap: Map<number, any> = new Map<number, any>();
 
