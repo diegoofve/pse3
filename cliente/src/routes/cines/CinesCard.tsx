@@ -230,6 +230,8 @@ export const CineCard = ({ cinema }: CineProps) => {
         </Box>
       </Collapse>
       <Dialog open={openPayment} onClose={() => setOpenPayment(false)}>
+
+
         <DialogTitle>Finalizar Compra</DialogTitle>
         
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2, minWidth: 350 }}>
@@ -271,6 +273,22 @@ export const CineCard = ({ cinema }: CineProps) => {
             </Box>
 
         </DialogContent>
+
+        <Snackbar 
+        open={toast.open} 
+        autoHideDuration={3000}
+        onClose={handleCloseToast}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleCloseToast} 
+          severity={toast.severity} 
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {toast.message}
+        </Alert>
+      </Snackbar>
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setOpenPayment(false)}>Cancelar</Button>
